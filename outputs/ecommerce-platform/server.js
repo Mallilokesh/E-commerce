@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, "public");
 const DATA_DIR = path.join(ROOT, "data");
-const DB_FILE = path.join(DATA_DIR, "db.json");
+const DB_FILE = process.env.VERCEL ? path.join("/tmp", "smartstore-db.json") : path.join(DATA_DIR, "db.json");
 const sessions = new Map();
 
 const seedProducts = [
@@ -213,7 +213,7 @@ const seedProducts = [
 ];
 
 function ensureDatabase() {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
   if (!fs.existsSync(DB_FILE)) {
     writeDb({ users: [], products: seedProducts, carts: {}, orders: [] });
     return;
@@ -465,7 +465,7 @@ async function handleApi(req, res, pathname) {
 
 ensureDatabase();
 
-http.createServer((req, res) => {
+function appHandler(req, res) {
   const { pathname } = new URL(req.url, `http://${req.headers.host}`);
   if (pathname.startsWith("/api/")) {
     handleApi(req, res, pathname).catch((error) => {
@@ -474,6 +474,12 @@ http.createServer((req, res) => {
   } else {
     serveStatic(req, res, pathname);
   }
-}).listen(PORT, () => {
-  console.log(`Commerce server running at http://localhost:${PORT}`);
-});
+}
+
+if (require.main === module) {
+  http.createServer(appHandler).listen(PORT, () => {
+    console.log(`Commerce server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = appHandler;
