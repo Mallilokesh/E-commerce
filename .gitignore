@@ -1,0 +1,5 @@
+.git/
+.agents/
+.codex/
+work/smartstore-git/
+outputs/ecommerce-platform/data/db.json

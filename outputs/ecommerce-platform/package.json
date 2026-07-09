@@ -1,0 +1,12 @@
+{
+  "name": "smartstore",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack e-commerce platform demo with product catalog, auth, cart, checkout, and order management.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

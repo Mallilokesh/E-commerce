@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SmartStore</title>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="stylesheet" href="/styles.css">
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="SmartStore home">
+        <span class="brand-mark">S</span>
+        <span>SmartStore</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#shop">Shop</a>
+        <a href="#orders">Orders</a>
+        <a href="#dashboard">Dashboard</a>
+      </nav>
+      <div class="top-actions">
+        <button class="icon-button" id="accountButton" aria-label="Account"><i data-lucide="user"></i></button>
+        <button class="cart-button" id="cartButton" aria-label="Open cart">
+          <i data-lucide="shopping-bag"></i>
+          <span id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-media" role="img" aria-label="Curated lifestyle products on a shop display"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Secure full-stack commerce</p>
+          <h1>SmartStore</h1>
+          <p>Launch a polished storefront with accounts, catalog browsing, server-managed carts, checkout, and order tracking.</p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#shop">Shop collection</a>
+            <button class="secondary-button" id="demoAccountButton">Create account</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Store highlights">
+        <div><strong>6</strong><span>curated categories</span></div>
+        <div><strong>100%</strong><span>demo token payments</span></div>
+        <div><strong>24/7</strong><span>order visibility</span></div>
+      </section>
+
+      <section class="shop-section" id="shop">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Catalog</p>
+            <h2>Featured products</h2>
+          </div>
+          <div class="controls">
+            <label class="search-box">
+              <i data-lucide="search"></i>
+              <input id="searchInput" type="search" placeholder="Search products">
+            </label>
+            <select id="categoryFilter" aria-label="Filter category">
+              <option value="all">All categories</option>
+            </select>
+            <select id="sortSelect" aria-label="Sort products">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price low to high</option>
+              <option value="price-desc">Price high to low</option>
+              <option value="rating">Top rated</option>
+            </select>
+          </div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="orders-section" id="orders">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Customer care</p>
+            <h2>Order history</h2>
+          </div>
+          <button class="secondary-button" id="refreshOrdersButton"><i data-lucide="refresh-cw"></i>Refresh</button>
+        </div>
+        <div class="order-list" id="orderList"></div>
+      </section>
+
+      <section class="dashboard-section" id="dashboard">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Operations</p>
+            <h2>Commerce dashboard</h2>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="panel">
+            <span>Revenue</span>
+            <strong id="revenueMetric">$0</strong>
+          </div>
+          <div class="panel">
+            <span>Open orders</span>
+            <strong id="ordersMetric">0</strong>
+          </div>
+          <div class="panel">
+            <span>Cart value</span>
+            <strong id="cartMetric">$0</strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="drawer" id="cartDrawer" aria-label="Shopping cart" aria-hidden="true">
+      <div class="drawer-header">
+        <h2>Cart</h2>
+        <button class="icon-button" id="closeCartButton" aria-label="Close cart"><i data-lucide="x"></i></button>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-summary">
+        <div><span>Subtotal</span><strong id="subtotalText">$0</strong></div>
+        <div><span>Shipping</span><strong id="shippingText">$0</strong></div>
+        <div><span>Tax</span><strong id="taxText">$0</strong></div>
+        <div class="total"><span>Total</span><strong id="totalText">$0</strong></div>
+        <button class="primary-button" id="checkoutButton">Checkout securely</button>
+      </div>
+    </aside>
+
+    <div class="modal" id="accountModal" aria-hidden="true">
+      <div class="modal-panel">
+        <button class="icon-button modal-close" data-close-modal aria-label="Close"><i data-lucide="x"></i></button>
+        <div id="accountContent"></div>
+      </div>
+    </div>
+
+    <div class="modal" id="checkoutModal" aria-hidden="true">
+      <div class="modal-panel wide">
+        <button class="icon-button modal-close" data-close-modal aria-label="Close"><i data-lucide="x"></i></button>
+        <form id="checkoutForm" class="checkout-form">
+          <div>
+            <p class="eyebrow">Checkout</p>
+            <h2>Shipping and payment</h2>
+          </div>
+          <div class="form-grid">
+            <label>Full name<input name="name" required autocomplete="name"></label>
+            <label>Email<input name="email" type="email" required autocomplete="email"></label>
+            <label class="span-2">Address<input name="address" required autocomplete="street-address"></label>
+            <label>City<input name="city" required autocomplete="address-level2"></label>
+            <label>Postal code<input name="postal" required autocomplete="postal-code"></label>
+            <label>Card number<input name="card" inputmode="numeric" required placeholder="4242 4242 4242 4242"></label>
+            <label>Expiry<input name="expiry" required placeholder="12/30"></label>
+            <label>CVC<input name="cvc" inputmode="numeric" required placeholder="123"></label>
+          </div>
+          <p class="secure-note"><i data-lucide="shield-check"></i>Card details are converted into a demo token in the browser. The server receives only a token and last four digits.</p>
+          <button class="primary-button" type="submit">Place order</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
